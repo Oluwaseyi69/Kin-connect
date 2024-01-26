@@ -1,5 +1,7 @@
 import datetime
 import jwt
+from django.http import JsonResponse
+from django.shortcuts import render
 from rest_framework import status, authentication, permissions
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.response import Response
@@ -56,8 +58,38 @@ class LogoutView(APIView):
     def post(self, request):
         response = Response()
         response.delete_cookie('jwt')
-        response.data ={
+        response.data = {
             'message': 'Successful logout'
         }
         return response
 
+
+# def receive_location(request):
+#     if request.method != 'POST':
+#         return JsonResponse({'status': 'error', 'message': 'Invalid request method'})
+#     latitude = request.POST.get('latitude')
+#     longitude = request.POST.get('longitude')
+#
+#     request.session['user_latitude'] = latitude
+#     request.session['user_longitude'] = longitude
+#
+#     return JsonResponse({'status': 'success'})
+
+
+def receive_token(request):
+    if request.method != 'POST':
+        return JsonResponse({'status': 'error', 'message': ''})
+    latitude = request.POST.get('latitude')
+    longitude = request.POST.get('longitude')
+
+    request.session['user_latitude'] = latitude
+    request.session['user_longitude'] = longitude
+    return JsonResponse({'status': 'success'})
+
+
+# def show_map(request):
+#     # Retrieve the stored user location from the session
+#     user_latitude = request.session.get('user_latitude', None)
+#     user_longitude = request.session.get('user_longitude', None)
+#
+#     return render(request, 'map.html', {'user_latitude': user_latitude, 'user_longitude': user_longitude})
